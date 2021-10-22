@@ -2,6 +2,8 @@ from io import BytesIO
 
 import lmdb
 from PIL import Image
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 from torch.utils.data import Dataset
 
 
