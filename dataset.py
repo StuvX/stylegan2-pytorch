@@ -1,8 +1,10 @@
 from io import BytesIO
 
 import lmdb
-from PIL import Image
+from PIL import Image, UnidentifiedImageError, ImageFile
 from torch.utils.data import Dataset
+
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 
 class MultiResolutionDataset(Dataset):
@@ -34,7 +36,12 @@ class MultiResolutionDataset(Dataset):
             img_bytes = txn.get(key)
 
         buffer = BytesIO(img_bytes)
-        img = Image.open(buffer)
-        img = self.transform(img)
+        try:
+            img = Image.open(buffer)
+            img = self.transform(img)
+            return img
+        except UnidentifiedImageError:
+            print('bad image')
+            return None
 
-        return img
+

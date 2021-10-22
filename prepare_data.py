@@ -3,14 +3,14 @@ from io import BytesIO
 import multiprocessing
 from functools import partial
 
-from PIL import Image
-from PIL import ImageFile
-ImageFile.LOAD_TRUNCATED_IMAGES = True
+from PIL import Image, ImageFile
+
 import lmdb
 from tqdm import tqdm
 from torchvision import datasets
 from torchvision.transforms import functional as trans_fn
 
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 def resize_and_convert(img, size, resample, quality=100):
     img = trans_fn.resize(img, size, resample)
