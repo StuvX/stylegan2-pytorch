@@ -34,7 +34,10 @@ def resize_multiple(
 def resize_worker(img_file, sizes, resample):
     i, file = img_file
     img = Image.open(file)
-    img = img.convert("RGB")
+    try:
+        img = img.convert("RGB")
+    except OSError:
+        print('file {} is corrupted, skipping'.format(file))
     out = resize_multiple(img, sizes=sizes, resample=resample)
 
     return i, out
