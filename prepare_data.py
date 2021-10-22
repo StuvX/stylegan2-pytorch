@@ -4,6 +4,8 @@ import multiprocessing
 from functools import partial
 
 from PIL import Image
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 import lmdb
 from tqdm import tqdm
 from torchvision import datasets
