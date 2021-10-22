@@ -6,6 +6,12 @@ from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 from torch.utils.data import Dataset
 
+def pil_loader(path: str) -> Image.Image:
+    # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
+    with open(path, 'rb') as f:
+        img = Image.open(f)
+        img.load()
+        return img.convert('RGB')
 
 class MultiResolutionDataset(Dataset):
     def __init__(self, path, transform, resolution=256):
@@ -36,7 +42,9 @@ class MultiResolutionDataset(Dataset):
             img_bytes = txn.get(key)
 
         buffer = BytesIO(img_bytes)
-        img = Image.open(buffer)
+
+        img = pil_loader(buffer)
+        # img = Image.open(buffer)
         img = self.transform(img)
 
         return img
