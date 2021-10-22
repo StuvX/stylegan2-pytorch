@@ -36,12 +36,12 @@ class MultiResolutionDataset(Dataset):
             img_bytes = txn.get(key)
 
         buffer = BytesIO(img_bytes)
-        try:
-            img = Image.open(buffer)
-            img = self.transform(img)
-            return img
-        except UnidentifiedImageError:
-            print('bad image')
-            return None
+        # try:
+        img = Image.open(buffer)
+        img = self.transform(img)
+        return img
+        # except UnidentifiedImageError:
+        #     print('bad image')
+        #     return None
 
 
