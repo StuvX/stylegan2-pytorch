@@ -11,8 +11,11 @@ from torchvision.transforms import functional as trans_fn
 
 
 def resize_and_convert(img, size, resample, quality=100):
-    img = trans_fn.resize(img, size, resample)
-    img = trans_fn.center_crop(img, size)
+    try:
+        img = trans_fn.resize(img, size, resample)
+        img = trans_fn.center_crop(img, size)
+    except OSError:
+        print('file corrupted, skipping')
     buffer = BytesIO()
     img.save(buffer, format="jpeg", quality=quality)
     val = buffer.getvalue()
