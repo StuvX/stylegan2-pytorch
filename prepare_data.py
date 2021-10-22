@@ -4,8 +4,6 @@ import multiprocessing
 from functools import partial
 
 from PIL import Image
-from PIL import ImageFile
-ImageFile.LOAD_TRUNCATED_IMAGES = True
 import lmdb
 from tqdm import tqdm
 from torchvision import datasets
@@ -32,18 +30,10 @@ def resize_multiple(
 
     return imgs
 
-def pil_loader(path: str) -> Image.Image:
-    # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
-    with open(path, 'rb') as f:
-        img = Image.open(f)
-        img.load()
-        return img.convert('RGB')
-
 def resize_worker(img_file, sizes, resample):
     i, file = img_file
-    # img = Image.open(file)
-    # img = img.convert("RGB")
-    img = pil_loader(file)
+    img = Image.open(file)
+    img = img.convert("RGB")
     out = resize_multiple(img, sizes=sizes, resample=resample)
 
     return i, out
