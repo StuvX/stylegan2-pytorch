@@ -11,16 +11,10 @@ from torchvision.transforms import functional as trans_fn
 
 
 def resize_and_convert(img, size, resample, quality=100):
-    try:
-        img = trans_fn.resize(img, size, resample)
-        img = trans_fn.center_crop(img, size)
-    except OSError:
-        print('file corrupted, skipping')
+    img = trans_fn.resize(img, size, resample)
+    img = trans_fn.center_crop(img, size)
     buffer = BytesIO()
-    try:
-        img.save(buffer, format="jpeg", quality=quality)
-    except OSError:
-        print('file corrupted, skipping')
+    img.save(buffer, format="jpeg", quality=quality)
     val = buffer.getvalue()
 
     return val
@@ -40,10 +34,7 @@ def resize_multiple(
 def resize_worker(img_file, sizes, resample):
     i, file = img_file
     img = Image.open(file)
-    try:
-        img = img.convert("RGB")
-    except OSError:
-        print('file {} is corrupted, skipping'.format(file))
+    img = img.convert("RGB")
     out = resize_multiple(img, sizes=sizes, resample=resample)
 
     return i, out
