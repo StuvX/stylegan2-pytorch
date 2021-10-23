@@ -521,7 +521,7 @@ if __name__ == "__main__":
     )
 
     # dataset = MultiResolutionDataset(args.path, transform, args.size)
-    dataset = datasets.ImageFolder(args.path, transform, args.size)
+    dataset = datasets.ImageFolder(args.path, transform)
     loader = data.DataLoader(
         dataset,
         batch_size=args.batch,
