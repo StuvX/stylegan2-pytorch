@@ -44,7 +44,7 @@ def resize_worker(img_file, sizes, resample):
     try:
         img = pil_loader(file)
     except:
-        print('{}} is breaking the system!'.format(file))
+        print('{} is breaking the system!'.format(file))
     # img = Image.open(file)
     # img = img.convert("RGB")
     out = resize_multiple(img, sizes=sizes, resample=resample)
