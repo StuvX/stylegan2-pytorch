@@ -3,14 +3,21 @@ from io import BytesIO
 import multiprocessing
 from functools import partial
 
-from PIL import Image, ImageFile
+from PIL import Image#, ImageFile
 
 import lmdb
 from tqdm import tqdm
 from torchvision import datasets
 from torchvision.transforms import functional as trans_fn
 
-ImageFile.LOAD_TRUNCATED_IMAGES = True
+# ImageFile.LOAD_TRUNCATED_IMAGES = True
+
+def pil_loader(path: str) -> Image.Image:
+    # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
+    with open(path, 'rb') as f:
+        img = Image.open(f)
+        img.load()
+        return img.convert('RGB')
 
 def resize_and_convert(img, size, resample, quality=100):
     img = trans_fn.resize(img, size, resample)
@@ -34,8 +41,12 @@ def resize_multiple(
 
 def resize_worker(img_file, sizes, resample):
     i, file = img_file
-    img = Image.open(file)
-    img = img.convert("RGB")
+    try:
+        img = pil_loader(file)
+    except:
+        print('{}} is breaking the system!'.format(file))
+    # img = Image.open(file)
+    # img = img.convert("RGB")
     out = resize_multiple(img, sizes=sizes, resample=resample)
 
     return i, out

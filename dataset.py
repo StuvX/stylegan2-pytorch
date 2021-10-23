@@ -1,11 +1,16 @@
 from io import BytesIO
 
 import lmdb
-from PIL import Image, UnidentifiedImageError, ImageFile
+from PIL import Image, UnidentifiedImageError#, ImageFile
 from torch.utils.data import Dataset
 
-ImageFile.LOAD_TRUNCATED_IMAGES = True
-
+# ImageFile.LOAD_TRUNCATED_IMAGES = True
+def pil_loader(path: str) -> Image.Image:
+    # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
+    with open(path, 'rb') as f:
+        img = Image.open(f)
+        img.load()
+        return img.convert('RGB')
 
 class MultiResolutionDataset(Dataset):
     def __init__(self, path, transform, resolution=256):
@@ -37,7 +42,8 @@ class MultiResolutionDataset(Dataset):
 
         buffer = BytesIO(img_bytes)
         # try:
-        img = Image.open(buffer)
+        img = pil_loader(buffer)
+        # img = Image.open(buffer)
         img = self.transform(img)
         return img
         # except UnidentifiedImageError:
