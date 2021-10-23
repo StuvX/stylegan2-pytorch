@@ -166,7 +166,7 @@ def train(args, loader, generator, discriminator, g_optim, d_optim, g_ema, devic
 
             break
 
-        real_img = next(loader)
+        real_img, label = next(loader)
         if real_img is None: pass
         real_img = real_img.to(device)
 
