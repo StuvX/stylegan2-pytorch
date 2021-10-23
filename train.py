@@ -9,7 +9,7 @@ from torch import nn, autograd, optim
 from torch.nn import functional as F
 from torch.utils import data
 import torch.distributed as dist
-from torchvision import transforms, utils
+from torchvision import transforms, utils, datasets
 from tqdm import tqdm
 
 try:
@@ -19,7 +19,7 @@ except ImportError:
     wandb = None
 
 
-from dataset import MultiResolutionDataset
+# from dataset import MultiResolutionDataset
 from distributed import (
     get_rank,
     synchronize,
@@ -512,13 +512,16 @@ if __name__ == "__main__":
 
     transform = transforms.Compose(
         [
+            transforms.Resize(args.size),
+            transforms.CenterCrop(args.size),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5), inplace=True),
         ]
     )
 
-    dataset = MultiResolutionDataset(args.path, transform, args.size)
+    # dataset = MultiResolutionDataset(args.path, transform, args.size)
+    dataset = datasets.ImageFolder(args.path, transform, args.size)
     loader = data.DataLoader(
         dataset,
         batch_size=args.batch,
