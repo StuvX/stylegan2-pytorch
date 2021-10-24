@@ -167,7 +167,7 @@ def train(args, loader, generator, discriminator, g_optim, d_optim, g_ema, devic
             break
 
         real_img, label = next(loader)
-        print('label is {}'.format(label))
+        # print('label is {}'.format(label))
         if real_img is None: pass
         real_img = real_img.to(device)
 
