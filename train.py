@@ -12,6 +12,9 @@ import torch.distributed as dist
 from torchvision import transforms, utils, datasets
 from tqdm import tqdm
 
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+
 try:
     import wandb
 
@@ -166,7 +169,11 @@ def train(args, loader, generator, discriminator, g_optim, d_optim, g_ema, devic
 
             break
 
-        real_img, label = next(loader)
+        try:
+            real_img, label = next(loader)
+        except OSError:
+            print('image corrupt {}'.format(real_img))
+            pass
         # print('label is {}'.format(label))
         if real_img is None: pass
         real_img = real_img.to(device)
