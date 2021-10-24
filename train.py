@@ -3,7 +3,7 @@ import math
 import random
 import os
 
-import numpy as np
+# import numpy as np
 import torch
 from torch import nn, autograd, optim
 from torch.nn import functional as F
