@@ -2,7 +2,7 @@ import argparse
 
 import torch
 from torchvision import utils
-from model import Generator
+# from model import Generator
 from tqdm import tqdm
 
 
@@ -63,7 +63,20 @@ if __name__ == "__main__":
         help="channel multiplier of the generator. config-f = 2, else = 1",
     )
 
+    parser.add_argument(
+        "--arch",
+        type=str,
+        default='swagan',
+        help='model architectures (stylegan2 | swagan)',
+    )
+
     args = parser.parse_args()
+
+    if args.arch == 'stylegan2':
+        from model import Generator, Discriminator
+
+    elif args.arch == 'swagan':
+        from swagan import Generator, Discriminator
 
     args.latent = 512
     args.n_mlp = 8
